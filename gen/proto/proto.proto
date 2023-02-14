@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "example.com/hasher/proto";
+
+package proto;
+
+// Hasher service definition
+service Hasher {
+  rpc GetHash (HashRequest) returns (HashResponse) {}
+}
+
+message HashRequest {}
+
+message HashResponse {
+  string hash = 1;
+  string updatedAt = 2;
+}

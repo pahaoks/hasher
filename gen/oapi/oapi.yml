@@ -1,0 +1,42 @@
+openapi: 3.0.1
+info:
+  title: Hasher service
+  description: Test task for Newxel
+  contact:
+    email: pahaoks@gmail.com
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080'
+tags:
+  - name: hasher
+    description: hash resolver
+paths:
+  '/hash':
+    get:
+      tags:
+        - hasher
+      summary: Get hash
+      operationId: getHash
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HashResponse'
+        '500':
+          description: Error
+components:
+  schemas:
+    HashResponse:
+      type: object
+      required:
+        - hash
+        - updatedAt
+      properties:
+        hash:
+          type: string
+          format: uuid
+        updatedAt:
+          type: string
+          format: date-time
