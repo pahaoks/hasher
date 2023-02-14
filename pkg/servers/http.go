@@ -3,7 +3,6 @@ package servers
 import (
 	"context"
 	"encoding/json"
-	"flag"
 	"log"
 	"net/http"
 
@@ -25,10 +24,10 @@ type HttpOptions struct {
 
 // Instantiate new http server
 func NewHttpServer(options HttpOptions) *HttpServer {
-	listenAddress := flag.String("listen", ":"+options.Port, "Listen address.")
+	listenAddress := ":" + options.Port
 
 	httpServer := http.Server{
-		Addr: *listenAddress,
+		Addr: listenAddress,
 	}
 
 	return &HttpServer{
@@ -48,13 +47,13 @@ func (h *HttpServer) Start(ctx context.Context) {
 
 	h.options.Register(router)
 
-	http.Handle("/", router)
+	h.server.Handler = router
 
 	ctx, h.stop = context.WithCancel(ctx)
 
 	go onShutdown(ctx, func() {
 		if err := h.server.Shutdown(ctx); err != nil {
-			log.Fatal("http: server shutdown error")
+			log.Println("http: server shutdown error")
 		}
 	})
 
@@ -62,7 +61,7 @@ func (h *HttpServer) Start(ctx context.Context) {
 	err := h.server.ListenAndServe()
 
 	if err != nil {
-		log.Fatal("http: server failed: ", err)
+		log.Println("http: server failed: ", err)
 	}
 }
 
