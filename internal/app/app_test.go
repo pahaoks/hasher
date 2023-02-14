@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func TestStartStopApp(t *testing.T) {
+func TestStartStopContextCancel(t *testing.T) {
 	app := New()
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -18,4 +18,16 @@ func TestStartStopApp(t *testing.T) {
 	}()
 
 	app.Start(ctx)
+}
+
+func TestStartStop(t *testing.T) {
+	app := New()
+
+	go func() {
+		time.Sleep(time.Second * 1)
+
+		app.Stop()
+	}()
+
+	app.Start(context.Background())
 }
